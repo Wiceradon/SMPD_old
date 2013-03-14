@@ -9,7 +9,7 @@ from points_generator.Generator import Generator
 from commons.Point import Point 
 
 if __name__ == '__main__':
-    print [3]*3
+    print (1,2) == (2,1)
 #     app = MainProgramFrame(root)
 #     root.mainloop()
     
