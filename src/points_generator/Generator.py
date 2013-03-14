@@ -4,6 +4,7 @@ Created on 09-03-2013
 @author: jakub
 '''
 from commons.Point import Point
+import numpy as np
 
 class Generator(object):
     '''
@@ -99,5 +100,9 @@ class Generator(object):
         for i in range(len(self.numberOfClasses)):
             oldSize = len(self.points)
             while (len(self.points) - oldSize) < self.localClassSize[i]:
-                tmp = []
+                coordToGenerate = oldSize+self.localClassSize[i] - len(self.points)
+                tmp = [[float("%.2f"%x) for x in np.random.normal(mu,sigma**2,size)] for (sigma, mu, size) in 
+                       zip(self.localSigma[i], self.localMu[i], [coordToGenerate]*self.featureVectorSize)]
+                for coord in zip(*tmp):
+                    self.points.add(Point(i+1,coord))
             
