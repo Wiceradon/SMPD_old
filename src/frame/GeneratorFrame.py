@@ -95,6 +95,7 @@ class GeneratorFrame:
         return value
     
     def showClassInput(self):
+        self.currentFeatureNumber = 1
         self.classCount = StringVar()
         self.classCount.set("Utworzono: 0")
         Label(self.frame, textvariable = self.classCount).grid(row = 4, sticky = W)
@@ -113,9 +114,22 @@ class GeneratorFrame:
         self.classSigma.frame.grid(row = 7, column = 1, sticky = W)
         self.addFeatureButton = Button(self.frame, text = "Dodaj ceche", command = self.performAddFeature)
         self.addFeatureButton.grid(row = 7, column = 2, sticky = W)
+        
+        self.classSigmaList = []
+        self.classMuList = []
     
-    def performAddFeature(self): 
-        print "A"
+    def performAddFeature(self):
+        self.errorString.set("")
+        if self.classSigma.validate() and self.classMu.validate():
+            self.classSigmaList.append(self.classSigma.returnFormatted())
+            self.classMuList.append(self.classMu.returnFormatted())
+            self.featureCount.set("Utworzono cech: "+str(self.currentFeatureNumber))
+            self.classMu.clearInput()
+            self.classSigma.clearInput()
+            self.currentFeatureNumber += 1
+            if self.currentFeatureNumber > self.generator.featureVectorSize: self.addFeatureButton.configure(state = 'disabled')
+        else:
+            self.errorString.set("Lokalne pole Mu lub Sigma dostalo nie numeryczna wartosc")
         
     def performAddClass(self):
         print "P"

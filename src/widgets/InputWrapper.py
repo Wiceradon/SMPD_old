@@ -29,3 +29,6 @@ class InputWrapper:
         
     def formatValue(self, format):
         return format(self.dataField.get())
+    
+    def clearInput(self):
+        self.dataField.delete(0, END)
