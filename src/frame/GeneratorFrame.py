@@ -27,27 +27,27 @@ class GeneratorFrame:
         Label(self.frame, textvariable = self.errorString, fg = 'red').grid(row = 0)
         
         field = InputWrapper(self.frame, "Podaj globalne mu: ", self.validFloat, self.returnFloat)
-        field.frame.grid(row = 1, sticky = W)
+        field.draw(1,0,1,1)
         self.globalInputs.append(field)
         
         field = InputWrapper(self.frame, "Podaj globalne sigma: ", self.validFloat, self.returnFloat)
-        field.frame.grid(row = 1, column = 1, sticky = W)
+        field.draw(1,2,1,3)
         self.globalInputs.append(field)
         
         field = InputWrapper(self.frame, "Podaj globalna liczebnosc grup: ", self.validPositiveInt, self.returnInt)
-        field.frame.grid(row = 2, sticky = W)
+        field.draw(2,0,2,1)
         self.globalInputs.append(field)
         
         field = InputWrapper(self.frame, "Podaj liczbe grup: ", lambda i: i != "" and self.validPositiveInt(i), self.returnInt)
-        field.frame.grid(row = 2, column = 1, sticky = W)
+        field.draw(2,2,2,3)
         self.globalInputs.append(field)
         
         field = InputWrapper(self.frame, "Podaj ilosc cech: ", lambda i: i != "" and self.validPositiveInt(i), self.returnInt)
-        field.frame.grid(row = 3, sticky = W)
+        field.draw(3,0,3,1)
         self.globalInputs.append(field)
         
         self.button = Button(self.frame, text = "Waliduj", command = self.setGlobal)
-        self.button.grid(row = 3, column = 1, sticky = W)
+        self.button.grid(row = 3, column = 2, sticky = W)
     
     def setGlobal(self):
         self.validateGlobal()
@@ -101,19 +101,19 @@ class GeneratorFrame:
         Label(self.frame, textvariable = self.classCount).grid(row = 4, sticky = W)
         self.classSize = InputWrapper(self.frame, "Liczebnosc grupy:", 
                                       self.validPositiveInt, self.returnInt)
-        self.classSize.frame.grid(row = 5, sticky = W)
+        self.classSizedraw(5,0,5,1)
         self.addClassButton = Button(self.frame, text = "Dodaj grupe", command = self.performAddClass, state = 'disabled')
-        self.addClassButton.grid(row = 5, column = 1, sticky = W)
+        self.addClassButton.grid(row = 5, column = 2, sticky = W)
         
         self.featureCount = StringVar()
         self.featureCount.set("Utworzono cech: 0")
         Label(self.frame, textvariable = self.featureCount).grid(row = 6, sticky = W)
         self.classMu = InputWrapper(self.frame, "Mu:", self.validPositiveInt, self.returnInt)
-        self.classMu.frame.grid(row = 7, sticky = W)
+        self.classMu.draw(7,0,7,1)
         self.classSigma = InputWrapper(self.frame, "Sigma:", self.validPositiveInt, self.returnInt)
-        self.classSigma.frame.grid(row = 7, column = 1, sticky = W)
+        self.classSigma.draw(7,2,7,3)
         self.addFeatureButton = Button(self.frame, text = "Dodaj ceche", command = self.performAddFeature)
-        self.addFeatureButton.grid(row = 7, column = 2, sticky = W)
+        self.addFeatureButton.grid(row = 7, column = 4, sticky = W)
         
         self.classSigmaList = []
         self.classMuList = []

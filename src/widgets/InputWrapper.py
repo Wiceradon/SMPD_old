@@ -15,12 +15,9 @@ class InputWrapper:
         '''
         Constructor
         '''
-        self.frame = Frame(parent)
         self.labelText = labelText
-        self.labelField = Label(self.frame, text = labelText)
-        self.labelField.pack(side = LEFT)
-        self.dataField = Entry(self.frame)
-        self.dataField.pack(side = LEFT)
+        self.labelField = Label(parent, text = labelText)
+        self.dataField = Entry(parent)
         self.validate = lambda : self.executeValidator(validateCondition)
         self.returnFormatted = lambda : self.formatValue(format)
     
@@ -32,3 +29,7 @@ class InputWrapper:
     
     def clearInput(self):
         self.dataField.delete(0, END)
+        
+    def draw(self, labelRow, labelCol, entryRow, entryCol):
+        self.labelField.grid(row = labelRow, column = labelCol, sticky = W)
+        self.dataField.grid(row = entryRow, column = entryCol, sticky = W)
