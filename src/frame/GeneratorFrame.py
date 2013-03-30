@@ -98,7 +98,7 @@ class GeneratorFrame:
         return value
     
     def showClassChooser(self):
-        self.selectFrame = Frame(self.frame)
+        self.selectFrame = Frame(self.frame, bd = 10, relief = GROOVE)
         self.dropValue = StringVar()
         self.dropValue.set("Wybierz grupe")
         self.dropMap = dict([ ("Grupa "+str(i+1), i) for i in range(self.generator.numberOfClasses)])
