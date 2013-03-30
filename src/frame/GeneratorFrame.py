@@ -63,7 +63,7 @@ class GeneratorFrame:
         self.generator.featureVectorLength = self.globalInputs[4].returnFormatted()
         for i in self.globalInputs:
             i.dataField.configure(state="disable")
-        self.showClassInput()
+        self.showClassChooser()
     
     def validateGlobal(self):
         self.validationError = False
@@ -96,6 +96,29 @@ class GeneratorFrame:
     
     def returnString(self, value):
         return value
+    
+    def showClassChooser(self):
+        self.selectFrame = Frame(self.frame)
+        self.dropValue = StringVar()
+        self.dropValue.set("Wybierz grupe")
+        self.dropMap = dict([ ("Grupa "+str(i+1), i) for i in range(self.generator.numberOfClasses)])
+        self.dropMap["Wybierz grupe"] = None
+        self.dropSelector = OptionMenu(self.selectFrame, self.dropValue, *self.dropMap.keys())
+        Label(self.selectFrame, text="Wybierz grupe z listy: ").grid(row = 0,column = 0)
+        self.dropSelector.grid(row = 0, column = 1)
+        self.chooserInput = InputWrapper(self.selectFrame, ", lub podaj id: ", self.validPositiveInt, self.returnInt)
+        self.chooserInput.draw(0, 2, 0, 3)
+        Button(self.selectFrame, text = "Wybierz", command = self.showClassInput).grid(row = 0, column = 4)
+        self.selectFrame.grid(row = 4, columnspan = 4, sticky = W)
+    
+    def chooseClass(self):
+        choosed = self.dropMap[self.dropValue.get()]
+        if choosed is not None:
+            if self.classFrame is not None: self.classFrame.destroy_contents()
+            else: 
+                self.classFrame = Frame(self.frame)
+                self.classFrame.grid(row = 5)
+            self.showClassInput()
     
     def showClassInput(self):
         self.currentFeatureNumber = 1
