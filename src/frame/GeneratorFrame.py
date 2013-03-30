@@ -26,6 +26,9 @@ class GeneratorFrame:
         self.errorString = StringVar()
         Label(self.frame, textvariable = self.errorString, fg = 'red').grid(row = 0)
         
+        self.createGlobalPanel()
+    
+    def createGlobalPanel(self):
         field = InputWrapper(self.frame, "Podaj globalne mu: ", self.validFloat, self.returnFloat)
         field.draw(1,0,1,1)
         self.globalInputs.append(field)
