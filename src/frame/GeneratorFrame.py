@@ -108,14 +108,14 @@ class GeneratorFrame:
         self.dropSelector.grid(row = 0, column = 1)
         self.chooserInput = InputWrapper(self.selectFrame, ", lub podaj id: ", self.validPositiveInt, self.returnInt)
         self.chooserInput.draw(0, 2, 0, 3)
-        Button(self.selectFrame, text = "Wybierz", command = self.showClassInput).grid(row = 0, column = 4)
+        Button(self.selectFrame, text = "Wybierz", command = self.chooseClass).grid(row = 0, column = 4)
         self.selectFrame.grid(row = 4, columnspan = 4, sticky = W)
     
     def chooseClass(self):
         choosed = self.dropMap[self.dropValue.get()]
         if choosed is not None:
             if self.classFrame is not None: self.classFrame.destroy_contents()
-            else: 
+            else:
                 self.classFrame = Frame(self.frame)
                 self.classFrame.grid(row = 5)
             self.showClassInput()
