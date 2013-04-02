@@ -11,21 +11,21 @@ class InputWrapper:
     '''
 
 
-    def __init__(self, parent, labelText, validateCondition, format):
+    def __init__(self, parent, labelText, validateCondition, formatt):
         '''
         Constructor
         '''
         self.labelText = labelText
         self.labelField = Label(parent, text = labelText)
         self.dataField = Entry(parent)
-        self.validate = lambda : self.executeValidator(validateCondition)
-        self.returnFormatted = lambda : self.formatValue(format)
+        self.validateCondition = validateCondition
+        self.formatt = formatt
     
-    def executeValidator(self, cond):
-        return cond(self.dataField.get())
+    def validate(self):
+        return self.validateCondition(self.dataField.get())
         
-    def formatValue(self, format):
-        return format(self.dataField.get())
+    def returnFormatted(self):
+        return self.formatt(self.dataField.get())
     
     def clearInput(self):
         self.dataField.delete(0, END)

@@ -6,6 +6,7 @@ Created on 16-03-2013
 from Tkinter import *
 from points_generator.Generator import Generator
 from widgets.InputWrapper import InputWrapper
+from commons import Validators
 
 class GeneratorFrame:
     '''
@@ -29,23 +30,23 @@ class GeneratorFrame:
         self.createGlobalPanel()
     
     def createGlobalPanel(self):
-        field = InputWrapper(self.frame, "Podaj globalne mu: ", self.validFloat, self.returnFloat)
+        field = InputWrapper(self.frame, "Podaj globalne mu: ", Validators.isFloatOrEmpty, self.returnFloat)
         field.draw(1,0,1,1)
         self.globalInputs.append(field)
         
-        field = InputWrapper(self.frame, "Podaj globalne sigma: ", self.validFloat, self.returnFloat)
+        field = InputWrapper(self.frame, "Podaj globalne sigma: ", Validators.isFloatOrEmpty, self.returnFloat)
         field.draw(1,2,1,3)
         self.globalInputs.append(field)
         
-        field = InputWrapper(self.frame, "Podaj globalna liczebnosc grup: ", self.validPositiveInt, self.returnInt)
+        field = InputWrapper(self.frame, "Podaj globalna liczebnosc grup: ", Validators.isPositiveIntOrEmpty, self.returnInt)
         field.draw(2,0,2,1)
         self.globalInputs.append(field)
         
-        field = InputWrapper(self.frame, "Podaj liczbe grup: ", lambda i: i != "" and self.validPositiveInt(i), self.returnInt)
+        field = InputWrapper(self.frame, "Podaj liczbe grup: ", Validators.isInt, self.returnInt)
         field.draw(2,2,2,3)
         self.globalInputs.append(field)
         
-        field = InputWrapper(self.frame, "Podaj ilosc cech: ", lambda i: i != "" and self.validPositiveInt(i), self.returnInt)
+        field = InputWrapper(self.frame, "Podaj ilosc cech: ", Validators.isInt, self.returnInt)
         field.draw(3,0,3,1)
         self.globalInputs.append(field)
         
@@ -69,22 +70,10 @@ class GeneratorFrame:
         self.validationError = False
         self.errorString.set("")
         for i in self.globalInputs:
-            if i.validate() == False:
+            if not i.validate():
                 self.errorString.set("Wystapil problem walidacji pola: '"+i.labelText+"'. Wartosc '"+i.dataField.get()+"' posiada zly format.")
                 self.validationError = True
                 break
-        
-    def validPositiveInt(self, value):
-        if value == "": return True
-        return value.isdigit() and (int(value)>0)
-    
-    def validFloat(self, value):
-        if value == "": return True
-        try:
-            float(value)
-            return True
-        except ValueError:
-            return False
         
     def returnInt(self, value):
         if value == "": return None
@@ -126,7 +115,7 @@ class GeneratorFrame:
         self.classCount.set("Utworzono: 0")
         Label(self.frame, textvariable = self.classCount).grid(row = 4, sticky = W)
         self.classSize = InputWrapper(self.frame, "Liczebnosc grupy:", 
-                                      self.validPositiveInt, self.returnInt)
+                                      Validators.isPositiveIntOrEmpty, self.returnInt)
         self.classSizedraw(5,0,5,1)
         self.addClassButton = Button(self.frame, text = "Dodaj grupe", command = self.performAddClass, state = 'disabled')
         self.addClassButton.grid(row = 5, column = 2, sticky = W)
@@ -134,9 +123,9 @@ class GeneratorFrame:
         self.featureCount = StringVar()
         self.featureCount.set("Utworzono cech: 0")
         Label(self.frame, textvariable = self.featureCount).grid(row = 6, sticky = W)
-        self.classMu = InputWrapper(self.frame, "Mu:", self.validPositiveInt, self.returnInt)
+        self.classMu = InputWrapper(self.frame, "Mu:", Validators.isFloatOrEmpty, self.returnInt)
         self.classMu.draw(7,0,7,1)
-        self.classSigma = InputWrapper(self.frame, "Sigma:", self.validPositiveInt, self.returnInt)
+        self.classSigma = InputWrapper(self.frame, "Sigma:", Validators.isFloatOrEmpty, self.returnInt)
         self.classSigma.draw(7,2,7,3)
         self.addFeatureButton = Button(self.frame, text = "Dodaj ceche", command = self.performAddFeature)
         self.addFeatureButton.grid(row = 7, column = 4, sticky = W)
