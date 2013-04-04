@@ -7,6 +7,7 @@ from Tkinter import *
 from points_generator.Generator import Generator
 from widgets.InputWrapper import InputWrapper
 from commons import Validators
+from commons import Parsers
 
 class GeneratorFrame:
     '''
@@ -30,23 +31,23 @@ class GeneratorFrame:
         self.createGlobalPanel()
     
     def createGlobalPanel(self):
-        field = InputWrapper(self.frame, "Podaj globalne mu: ", Validators.isFloatOrEmpty, self.returnFloat)
+        field = InputWrapper(self.frame, "Podaj globalne mu: ", Validators.isFloatOrEmpty, Parsers.parseFloatOrNone)
         field.draw(1,0,1,1)
         self.globalInputs.append(field)
         
-        field = InputWrapper(self.frame, "Podaj globalne sigma: ", Validators.isFloatOrEmpty, self.returnFloat)
+        field = InputWrapper(self.frame, "Podaj globalne sigma: ", Validators.isFloatOrEmpty, Parsers.parseFloatOrNone)
         field.draw(1,2,1,3)
         self.globalInputs.append(field)
         
-        field = InputWrapper(self.frame, "Podaj globalna liczebnosc grup: ", Validators.isPositiveIntOrEmpty, self.returnInt)
+        field = InputWrapper(self.frame, "Podaj globalna liczebnosc grup: ", Validators.isPositiveIntOrEmpty, Parsers.parseIntOrNone)
         field.draw(2,0,2,1)
         self.globalInputs.append(field)
         
-        field = InputWrapper(self.frame, "Podaj liczbe grup: ", Validators.isInt, self.returnInt)
+        field = InputWrapper(self.frame, "Podaj liczbe grup: ", Validators.isInt, Parsers.parseIntOrNone)
         field.draw(2,2,2,3)
         self.globalInputs.append(field)
         
-        field = InputWrapper(self.frame, "Podaj ilosc cech: ", Validators.isInt, self.returnInt)
+        field = InputWrapper(self.frame, "Podaj ilosc cech: ", Validators.isInt, Parsers.parseIntOrNone)
         field.draw(3,0,3,1)
         self.globalInputs.append(field)
         
@@ -74,17 +75,6 @@ class GeneratorFrame:
                 self.errorString.set("Wystapil problem walidacji pola: '"+i.labelText+"'. Wartosc '"+i.dataField.get()+"' posiada zly format.")
                 self.validationError = True
                 break
-        
-    def returnInt(self, value):
-        if value == "": return None
-        return int(value)
-    
-    def returnFloat(self, value):
-        if value == "": return None
-        return float(value)
-    
-    def returnString(self, value):
-        return value
     
     def showClassChooser(self):
         self.selectFrame = Frame(self.frame, bd = 10, relief = GROOVE)
@@ -95,7 +85,7 @@ class GeneratorFrame:
         self.dropSelector = OptionMenu(self.selectFrame, self.dropValue, *self.dropMap.keys())
         Label(self.selectFrame, text="Wybierz grupe z listy: ").grid(row = 0,column = 0)
         self.dropSelector.grid(row = 0, column = 1)
-        self.chooserInput = InputWrapper(self.selectFrame, ", lub podaj id: ", self.validPositiveInt, self.returnInt)
+        self.chooserInput = InputWrapper(self.selectFrame, ", lub podaj id: ", self.validPositiveInt, Parsers.parseIntOrNone)
         self.chooserInput.draw(0, 2, 0, 3)
         Button(self.selectFrame, text = "Wybierz", command = self.chooseClass).grid(row = 0, column = 4)
         self.selectFrame.grid(row = 4, columnspan = 4, sticky = W)
@@ -115,7 +105,7 @@ class GeneratorFrame:
         self.classCount.set("Utworzono: 0")
         Label(self.frame, textvariable = self.classCount).grid(row = 4, sticky = W)
         self.classSize = InputWrapper(self.frame, "Liczebnosc grupy:", 
-                                      Validators.isPositiveIntOrEmpty, self.returnInt)
+                                      Validators.isPositiveIntOrEmpty, Parsers.parseIntOrNone)
         self.classSizedraw(5,0,5,1)
         self.addClassButton = Button(self.frame, text = "Dodaj grupe", command = self.performAddClass, state = 'disabled')
         self.addClassButton.grid(row = 5, column = 2, sticky = W)
@@ -123,9 +113,9 @@ class GeneratorFrame:
         self.featureCount = StringVar()
         self.featureCount.set("Utworzono cech: 0")
         Label(self.frame, textvariable = self.featureCount).grid(row = 6, sticky = W)
-        self.classMu = InputWrapper(self.frame, "Mu:", Validators.isFloatOrEmpty, self.returnInt)
+        self.classMu = InputWrapper(self.frame, "Mu:", Validators.isFloatOrEmpty, Parsers.parseFloatOrNone)
         self.classMu.draw(7,0,7,1)
-        self.classSigma = InputWrapper(self.frame, "Sigma:", Validators.isFloatOrEmpty, self.returnInt)
+        self.classSigma = InputWrapper(self.frame, "Sigma:", Validators.isFloatOrEmpty, Parsers.parseFloatOrNone)
         self.classSigma.draw(7,2,7,3)
         self.addFeatureButton = Button(self.frame, text = "Dodaj ceche", command = self.performAddFeature)
         self.addFeatureButton.grid(row = 7, column = 4, sticky = W)
