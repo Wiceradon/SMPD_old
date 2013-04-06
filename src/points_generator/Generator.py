@@ -78,7 +78,7 @@ class Generator(object):
         if len(self.classCenters) != self.numberOfClasses: return self._setError(-5, '')
         # Now check if every point has long enough vector to proper represent class in dataset
         for i in self.classCenters:
-            if len(i.features) != self.featureVectorSize: return self._setError(-6, ' Dla klasy '+str(i.label))
+            if len(i.FEATURES) != self.featureVectorSize: return self._setError(-6, ' Dla klasy '+str(i.label))
         # Check if localMu, localSigma and localClassSize is proper length
         if len(self.localMu) != self.numberOfClasses: return self._setError(-7, '')
         if len(self.localSigma) != self.numberOfClasses: return self._setError(-8, '')
@@ -94,10 +94,13 @@ class Generator(object):
         return 0
     
     def generatePoints(self):
+        # Generate points representing classes for validation
+        for idn, c in zip(range(self.numberOfClasses), self.localSigma):
+            self.addClassCenter(c, idn)
         # Validate fields before generating
         if self._validateFields() != 0: return self.lastErrorId
         # Generate points
-        for i in range(len(self.numberOfClasses)):
+        for i in range(self.numberOfClasses):
             oldSize = len(self.points)
             while (len(self.points) - oldSize) < self.localClassSize[i]:
                 coordToGenerate = oldSize+self.localClassSize[i] - len(self.points)
@@ -105,4 +108,5 @@ class Generator(object):
                        zip(self.localSigma[i], self.localMu[i], [coordToGenerate]*self.featureVectorSize)]
                 for coord in zip(*tmp):
                     self.points.add(Point(i+1,coord))
+        return 0
             

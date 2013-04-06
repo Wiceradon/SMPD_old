@@ -20,4 +20,4 @@ def isFloatOrEmpty(value):
     except ValueError:
         return False
 
-isInt = lambda i: i != "" and isPositiveIntOrEmpty(i)
+isPositiveInt = lambda i: i != "" and isPositiveIntOrEmpty(i)

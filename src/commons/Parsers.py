@@ -14,4 +14,7 @@ def parseFloatOrNone(value):
 
 def parseSimpleString(value):
     if value == None: return ""
-    return value
+    return str(value)
+
+def parsePointToString(p, delim1, delim2):
+    return str(p.LABEL)+delim1+delim2.join([str(x) for x in p.FEATURES])

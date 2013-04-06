@@ -9,8 +9,6 @@ from Tkinter import *
 from points_generator.Generator import Generator
 from commons.Point import Point 
 
-def a(self,f):
-    print f
 
 if __name__ == '__main__':
     root = Tk()
@@ -19,6 +17,5 @@ if __name__ == '__main__':
     app.addButton("A", GeneratorFrame)
     
     root.mainloop()
-    
-    
+
     

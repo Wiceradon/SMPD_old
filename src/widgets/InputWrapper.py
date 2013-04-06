@@ -11,7 +11,7 @@ class InputWrapper:
     '''
 
 
-    def __init__(self, parent, labelText, validateCondition, formatt):
+    def __init__(self, parent, labelText, validateCondition, format):
         '''
         Constructor
         '''
@@ -19,16 +19,20 @@ class InputWrapper:
         self.labelField = Label(parent, text = labelText)
         self.dataField = Entry(parent)
         self.validateCondition = validateCondition
-        self.formatt = formatt
+        self.format = format
     
     def validate(self):
         return self.validateCondition(self.dataField.get())
         
     def returnFormatted(self):
-        return self.formatt(self.dataField.get())
+        return self.format(self.dataField.get())
     
     def clearInput(self):
         self.dataField.delete(0, END)
+    
+    def setInput(self, value):
+        self.clearInput()
+        self.dataField.insert(0, value)
         
     def draw(self, labelRow, labelCol, entryRow, entryCol):
         self.labelField.grid(row = labelRow, column = labelCol, sticky = W)
