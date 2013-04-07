@@ -30,7 +30,7 @@ class GeneratorFrame:
         self.globalInputs = []
         self.validationError = False
         self.generator = Generator()
-        self.histogramWindow = None
+        self.histogramFrame = None
         self.classCallback = lambda: self.choose(5, "classChooser", ["Wybrano zla grupe", "Grupa"], self.showClassInput)
         self.featureCallback = lambda: self.choose(7, "featureChooser", ["Wybrano zla ceche", "Cecha"], self.showFeatureInput)
         
@@ -64,12 +64,14 @@ class GeneratorFrame:
         self.button = Button(self.frame, text = "Waliduj", command = self.setGlobal)
         self.button.grid(row = 3, column = 2, sticky = W)
         
-        Button(self.frame, text = "Generuj", command = self.generate).grid(row = 9, sticky = W)
+        self.generateButton = Button(self.frame, text = "Generuj", command = self.generate, state = 'disabled')
+        self.generateButton.grid(row = 9, sticky = W)
         self.save = Button(self.frame, text = "Zapisz", command = self.writeToFile, state = 'disabled')
         self.save.grid(row = 9, column = 1, sticky = W)
         self.histogram = Button(self.frame, text = "Histogram", command = self.histogramOptions, state = 'disabled')
         self.histogram.grid(row = 9, column = 2, sticky = W)
-        
+        self.clearButton = Button(self.frame, text = "Reset", command = self.reset)
+        self.clearButton.grid(row = 9, column = 3, sticky = W)
     
     def setGlobal(self):
         self.validateGlobal()
@@ -84,6 +86,7 @@ class GeneratorFrame:
                      for i in range(self.globalInputs[3].returnFormatted())]
         for i in self.globalInputs:
             i.dataField.configure(state="disable")
+        self.generateButton.configure(state = 'normal')
         self.showChooser(self.frame, self.generator.numberOfClasses, 
                          self.classCallback, 
                          ["Wybierz grupe","Grupa", "Wybierz grupe z listy: "], "classChooser")
@@ -257,4 +260,31 @@ class GeneratorFrame:
         self.histogramFrame = Frame(self.frame)
         self.histogramChooser()
         self.histogramFrame.grid(row = 10, columnspan = 6)
+        
+    def reset(self):
+        if self.histogramFrame != None: # make sure that histogram frame exist
+            # destroy histogram frame
+            self.histogramFrame.grid_forget() # grid forget delete frame from parent
+            self.histogramFrame.destroy() # destroy is deleting from memory
+            self.histogramFrame = None # forget about it
+        
+        if self.choosers["classChooser"].get("frame") != None: # get will return None if there is no such key as "frame"
+            # destroy frame for class manipulation
+            self.choosers["classChooser"]["frame"].grid_forget()
+            self.choosers["classChooser"]["frame"].destroy()
+            self.choosers["classChooser"] = {} # forget about it
+        
+        if self.choosers["featureChooser"].get("frame") != None:
+            # destroy frame for feature manipulation (it shouln't be necessary)
+            self.choosers["featureChooser"]["frame"].destroy()
+            self.choosers["featureChooser"] = {} # forget about it
+        
+        for i in self.globalInputs:
+            i.dataField.configure(state = "normal") # change state of inputs to normal (normal is default state)
+            i.clearInput()
+        
+        self.save.configure(state = "disabled") # change state of save button to disabled (there is no points to save)
+        self.histogram.configure(state = 'disabled') # same as above
+        self.generateButton.configure(state = 'disabled')
+        
         

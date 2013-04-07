@@ -20,7 +20,10 @@ class Generator(object):
         self.classCenters = set()
         self.points = set()
         self.localMu, self.localSigma, self.localClassSize = [], [], []
-        self.ERRORS = {-1: "Brak zmiennej Mu", -2: "Brak zmiennej Sigma", -3: "Brak lub zbyt mala liczba klas"}
+        self.ERRORS = {-1: "Brak zmiennej Mu", -2: "Brak zmiennej Sigma", -3: "Brak lub zbyt mala liczba klas",
+                       -4: "Brak lub zbyt mala liczba cech", -5: "Pewne srodki grup sie powtarzaja",
+                       -6: "Za malo cech.", -7: "Za malo Mu", -8: "Za malo sigm", -9: "Za malo liczb reprezentujacych wielkosc grupy",
+                       -10: "Brak zmiennej reprezentujacej wielkosc klasy lub zla definicja"}
         self.lastError = ""
         self.lastErrorId = None
     
