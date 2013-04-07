@@ -9,6 +9,8 @@ from widgets.InputWrapper import InputWrapper
 from commons import Validators
 from commons import Parsers
 from commons import Managers
+import matplotlib.pyplot as plt 
+import pylab
 
 class GeneratorFrame:
     '''
@@ -21,18 +23,20 @@ class GeneratorFrame:
         '''
         
         self.frame = frame
+        self.frame.wm_title("Lab 1")
         self.classFrame = None
         self.featureFrame = None
         self.classMap = {}
         self.globalInputs = []
         self.validationError = False
         self.generator = Generator()
+        self.histogramWindow = None
         self.classCallback = lambda: self.choose(5, "classChooser", ["Wybrano zla grupe", "Grupa"], self.showClassInput)
         self.featureCallback = lambda: self.choose(7, "featureChooser", ["Wybrano zla ceche", "Cecha"], self.showFeatureInput)
         
         self.errorString = StringVar()
         Label(self.frame, textvariable = self.errorString, fg = 'red').grid(row = 0)
-        self.choosers = {"classChooser": {}, "featureChooser": {}}
+        self.choosers = {"classChooser": {}, "featureChooser": {}, "classHistogram": {}, "featureHistogram": {}}
         self.currents = {"currentClass": None, "currentFeature": None}
         self.createGlobalPanel()
     
@@ -63,7 +67,7 @@ class GeneratorFrame:
         Button(self.frame, text = "Generuj", command = self.generate).grid(row = 9, sticky = W)
         self.save = Button(self.frame, text = "Zapisz", command = self.writeToFile, state = 'disabled')
         self.save.grid(row = 9, column = 1, sticky = W)
-        self.histogram = Button(self.frame, text = "Histogram", command = self.generate, state = 'disabled')
+        self.histogram = Button(self.frame, text = "Histogram", command = self.histogramOptions, state = 'disabled')
         self.histogram.grid(row = 9, column = 2, sticky = W)
         
     
@@ -202,3 +206,55 @@ class GeneratorFrame:
         
     def writeToFile(self):
         Managers.pointsFileWrite(self.generator.points)
+        
+    def histogramChooser(self):
+        self.histogramGroup = StringVar()
+        self.histogramGroup.set("Grupa 1")
+        self.histogramFeature = StringVar()
+        self.histogramFeature.set("Cecha 1")
+        self.histogramDropGroup = dict([ ("Grupa "+str(i+1), i) for i in range(self.generator.numberOfClasses) ])
+        self.histogramFeatureGroup = dict([ ("Cecha "+str(i+1), i) for i in range(self.generator.featureVectorSize) ])
+        
+        Label(self.histogramFrame, text = "Wybierz grupe z listy ").grid(row = 0, column = 0)
+        OptionMenu(self.histogramFrame, self.histogramGroup, *[ "Grupa "+str(i+1) for i in 
+                                                               range(self.generator.numberOfClasses) ]).grid(row = 0, column = 1)
+        
+        self.histogramGroupInput = InputWrapper(self.histogramFrame, 
+                                                                  ", lub podaj id: ", Validators.isPositiveInt, Parsers.parseIntOrNone)
+        self.histogramGroupInput.draw(0, 2, 0, 3)
+        Label(self.histogramFrame, text = "Wybierz ceche z listy ").grid(row = 1, column = 0)
+        OptionMenu(self.histogramFrame, self.histogramFeature, *[ "Cecha "+str(i+1) for i in 
+                                                               range(self.generator.featureVectorSize) ]).grid(row = 1, column = 1)
+        
+        self.histogramFeatureInput = InputWrapper(self.histogramFrame, 
+                                                                  ", lub podaj id: ", Validators.isPositiveInt, Parsers.parseIntOrNone)
+        self.histogramFeatureInput.draw(1, 2, 1, 3)
+        
+        self.histogramBins = InputWrapper(self.histogramFrame, 
+                                                                  "Podaj czestotliowsc slopkow: ", Validators.isPositiveInt, Parsers.parseIntOrNone)
+        self.histogramBins.draw(2, 0, 2, 1)
+        
+        Button(self.histogramFrame, text = "Generuj", command = self.histogramSet).grid(row = 2, column = 2)
+    
+    def histogramSet(self):
+        self.errorString.set("")
+        isValidGroup = self.histogramGroupInput.validate()
+        isValidFeature = self.histogramFeatureInput.validate()
+        if isValidGroup: isValidGroup = self.histogramGroupInput.returnFormatted() <= self.generator.numberOfClasses
+        if isValidFeature: isValidGroup = self.histogramFeatureInput.returnFormatted() <= self.generator.featureVectorSize
+        
+        chosenGroup = self.histogramGroupInput.returnFormatted()-1 if isValidGroup else self.histogramDropGroup[self.histogramGroup.get()]
+        chosenFeature = self.histogramFeatureInput.returnFormatted()-1 if isValidFeature else self.histogramFeatureGroup[self.histogramFeature.get()]
+        isBin = self.histogramBins.validate()
+        if not isBin:
+            self.errorString("Zla wartosc dla czestotliwosci slupkow")
+            return
+        bin = self.histogramBins.returnFormatted()
+        plt.hist(self.generator.getGenCoord(chosenGroup, chosenFeature), bins = bin)
+        pylab.show()
+        
+    def histogramOptions(self):
+        self.histogramFrame = Frame(self.frame)
+        self.histogramChooser()
+        self.histogramFrame.grid(row = 10, columnspan = 6)
+        

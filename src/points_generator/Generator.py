@@ -109,4 +109,8 @@ class Generator(object):
                 for coord in zip(*tmp):
                     self.points.add(Point(i+1,coord))
         return 0
+    
+    def getGenCoord(self, label, dimmension):
+        if len(self.points) == 0: return []
+        return [ x.FEATURES[dimmension] for x in self.points if x.LABEL == label+1 ]
             

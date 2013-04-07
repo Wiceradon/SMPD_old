@@ -14,7 +14,7 @@ if __name__ == '__main__':
     root = Tk()
     root.wm_title("SMPD")
     app = MainProgramFrame(root)
-    app.addButton("A", GeneratorFrame)
+    app.addButton("Lab 1", GeneratorFrame)
     
     root.mainloop()
 
