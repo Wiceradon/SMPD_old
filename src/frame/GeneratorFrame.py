@@ -208,7 +208,7 @@ class GeneratorFrame:
         self.histogram.config(state = 'normal')
         
     def writeToFile(self):
-        Managers.pointsFileWrite(self.generator.points)
+        Managers.pointsFileWrite(self.generator.points, featureDelimeter=" ")
         
     def histogramChooser(self):
         self.histogramGroup = StringVar()
